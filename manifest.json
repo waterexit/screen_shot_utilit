@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "フルスクリーンショット",
+  "version": "1.0",
+  "description": "ワンクリックでフルページスクリーンショットを撮影",
+  
+  "permissions": [
+    "activeTab",
+    "debugger",
+    "downloads"
+  ],
+  
+  "action": {
+    "default_title": "フルスクリーンショット撮影"
+  },
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "commands": {
+    "take_screenshot": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S"
+      },
+      "description": "フルページスクリーンショット撮影"
+    }
+  }
+}
