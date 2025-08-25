@@ -48,7 +48,8 @@ async function handleScreenshot(tab) {
           width: contentSize.width,
           height: contentSize.height,
           scale: 1  // 元のスケールを維持
-        }
+        },
+        captureBeyondViewport: true
       }, (response) => {
         if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError);
@@ -79,22 +80,13 @@ async function downloadScreenshot(base64Data) {
   const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
   const filename = `devtools-exact-${timestamp}.png`;
   
-  const byteCharacters = atob(base64Data);
-  const byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
-  const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], { type: 'image/png' });
-  const url = URL.createObjectURL(blob);
-  
+  const url = `data:image/png;base64,${base64Data}`;
+
   chrome.downloads.download({
     url: url,
     filename: filename,
     saveAs: false
   }, (downloadId) => {
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    
     if (chrome.runtime.lastError) {
       console.error('ダウンロードエラー:', chrome.runtime.lastError);
     } else {
